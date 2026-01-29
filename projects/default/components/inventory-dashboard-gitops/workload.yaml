@@ -1,0 +1,16 @@
+apiVersion: openchoreo.dev/v1alpha1
+kind: Workload
+metadata:
+  name: inventory-dashboard-gitops-workload
+  namespace: default
+spec:
+  containers:
+    main:
+      image: host.k3d.internal:10082/default-inventory-dashboard-gitops-image:v1-9dec2481
+  endpoints:
+    inventory-dashboard:
+      port: 3000
+      type: HTTP
+  owner:
+    componentName: inventory-dashboard-gitops
+    projectName: default
