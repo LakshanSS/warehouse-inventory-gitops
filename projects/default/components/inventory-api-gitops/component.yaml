@@ -7,4 +7,4 @@ metadata:
 spec:
   owner:
     projectName: default
-  componentType: service
+  componentType: deployment/service
