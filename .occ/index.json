@@ -1,6 +1,538 @@
 {
   "resources": [
     {
+      "gvk": "openchoreo.dev/v1alpha1/ComponentRelease",
+      "namespace": "default",
+      "name": "inventory-api-gitops-9dec2481",
+      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-api-gitops/releases/inventory-api-gitops-9dec2481.yaml",
+      "object": {
+        "apiVersion": "openchoreo.dev/v1alpha1",
+        "kind": "ComponentRelease",
+        "metadata": {
+          "name": "inventory-api-gitops-9dec2481",
+          "namespace": "default"
+        },
+        "spec": {
+          "componentProfile": {
+            "parameters": null
+          },
+          "componentType": {
+            "resources": [
+              {
+                "id": "deployment",
+                "template": {
+                  "apiVersion": "apps/v1",
+                  "kind": "Deployment",
+                  "metadata": {
+                    "labels": "${metadata.labels}",
+                    "name": "${metadata.name}",
+                    "namespace": "${metadata.namespace}"
+                  },
+                  "spec": {
+                    "replicas": "${parameters.replicas}",
+                    "selector": {
+                      "matchLabels": "${metadata.podSelectors}"
+                    },
+                    "template": {
+                      "metadata": {
+                        "labels": "${metadata.podSelectors}"
+                      },
+                      "spec": {
+                        "containers": [
+                          {
+                            "image": "${workload.containers[\"app\"].image}",
+                            "imagePullPolicy": "${parameters.imagePullPolicy}",
+                            "name": "app",
+                            "ports": [
+                              {
+                                "containerPort": "${parameters.port}",
+                                "name": "http",
+                                "protocol": "TCP"
+                              }
+                            ],
+                            "resources": {
+                              "limits": {
+                                "cpu": "${envOverrides.resources.limits.cpu}",
+                                "memory": "${envOverrides.resources.limits.memory}"
+                              },
+                              "requests": {
+                                "cpu": "${envOverrides.resources.requests.cpu}",
+                                "memory": "${envOverrides.resources.requests.memory}"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "id": "service",
+                "template": {
+                  "apiVersion": "v1",
+                  "kind": "Service",
+                  "metadata": {
+                    "labels": "${metadata.labels}",
+                    "name": "${metadata.name}",
+                    "namespace": "${metadata.namespace}"
+                  },
+                  "spec": {
+                    "ports": [
+                      {
+                        "name": "http",
+                        "port": 80,
+                        "protocol": "TCP",
+                        "targetPort": "${parameters.port}"
+                      }
+                    ],
+                    "selector": "${metadata.podSelectors}",
+                    "type": "ClusterIP"
+                  }
+                }
+              },
+              {
+                "id": "httproute",
+                "template": {
+                  "apiVersion": "gateway.networking.k8s.io/v1",
+                  "kind": "HTTPRoute",
+                  "metadata": {
+                    "labels": "${metadata.labels}",
+                    "name": "${metadata.name}",
+                    "namespace": "${metadata.namespace}"
+                  },
+                  "spec": {
+                    "hostnames": [
+                      "${metadata.environmentName}.${dataplane.publicVirtualHost}"
+                    ],
+                    "parentRefs": [
+                      {
+                        "name": "gateway-default",
+                        "namespace": "openchoreo-data-plane"
+                      }
+                    ],
+                    "rules": [
+                      {
+                        "backendRefs": [
+                          {
+                            "name": "${metadata.name}",
+                            "port": 80
+                          }
+                        ],
+                        "filters": [
+                          {
+                            "type": "URLRewrite",
+                            "urlRewrite": {
+                              "path": {
+                                "replacePrefixMatch": "/",
+                                "type": "ReplacePrefixMatch"
+                              }
+                            }
+                          }
+                        ],
+                        "matches": [
+                          {
+                            "method": "GET",
+                            "path": {
+                              "type": "PathPrefix",
+                              "value": "/${metadata.name}"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "schema": {
+              "envOverrides": {
+                "resources": {
+                  "$default": {},
+                  "limits": {
+                    "$default": {},
+                    "cpu": "string | default=1000m",
+                    "memory": "string | default=1Gi"
+                  },
+                  "requests": {
+                    "$default": {},
+                    "cpu": "string | default=100m",
+                    "memory": "string | default=256Mi"
+                  }
+                }
+              },
+              "parameters": {
+                "imagePullPolicy": "string | default=IfNotPresent",
+                "port": "integer | default=80",
+                "replicas": "integer | default=1"
+              }
+            },
+            "workloadType": "deployment"
+          },
+          "owner": {
+            "componentName": "inventory-api-gitops",
+            "projectName": "default"
+          },
+          "workload": {
+            "containers": {
+              "main": {
+                "env": [
+                  {
+                    "key": "ENVIRONMENT",
+                    "value": "production"
+                  },
+                  {
+                    "key": "DB_SERVER",
+                    "valueFrom": {
+                      "secretRef": {
+                        "key": "value",
+                        "name": "inventory-db-server"
+                      }
+                    }
+                  },
+                  {
+                    "key": "DB_PORT",
+                    "valueFrom": {
+                      "secretRef": {
+                        "key": "value",
+                        "name": "inventory-db-port"
+                      }
+                    }
+                  },
+                  {
+                    "key": "DB_USER",
+                    "valueFrom": {
+                      "secretRef": {
+                        "key": "value",
+                        "name": "inventory-db-user"
+                      }
+                    }
+                  },
+                  {
+                    "key": "DB_PASSWORD",
+                    "valueFrom": {
+                      "secretRef": {
+                        "key": "value",
+                        "name": "inventory-db-password"
+                      }
+                    }
+                  },
+                  {
+                    "key": "DB_NAME",
+                    "valueFrom": {
+                      "secretRef": {
+                        "key": "value",
+                        "name": "inventory-db-name"
+                      }
+                    }
+                  }
+                ],
+                "image": "host.k3d.internal:10082/default-inventory-api-gitops-image:v1-9dec2481"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "gvk": "openchoreo.dev/v1alpha1/ComponentRelease",
+      "namespace": "default",
+      "name": "inventory-dashboard-gitops-9dec2481",
+      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-dashboard-gitops/releases/inventory-dashboard-gitops-9dec2481.yaml",
+      "object": {
+        "apiVersion": "openchoreo.dev/v1alpha1",
+        "kind": "ComponentRelease",
+        "metadata": {
+          "name": "inventory-dashboard-gitops-9dec2481",
+          "namespace": "default"
+        },
+        "spec": {
+          "componentProfile": {
+            "parameters": null
+          },
+          "componentType": {
+            "resources": [
+              {
+                "id": "deployment",
+                "template": {
+                  "apiVersion": "apps/v1",
+                  "kind": "Deployment",
+                  "metadata": {
+                    "labels": "${metadata.labels}",
+                    "name": "${metadata.name}",
+                    "namespace": "${metadata.namespace}"
+                  },
+                  "spec": {
+                    "replicas": "${parameters.replicas}",
+                    "selector": {
+                      "matchLabels": "${metadata.podSelectors}"
+                    },
+                    "template": {
+                      "metadata": {
+                        "labels": "${metadata.podSelectors}"
+                      },
+                      "spec": {
+                        "containers": [
+                          {
+                            "image": "${workload.containers[\"app\"].image}",
+                            "imagePullPolicy": "${parameters.imagePullPolicy}",
+                            "name": "app",
+                            "ports": [
+                              {
+                                "containerPort": "${parameters.port}",
+                                "name": "http",
+                                "protocol": "TCP"
+                              }
+                            ],
+                            "resources": {
+                              "limits": {
+                                "cpu": "${envOverrides.resources.limits.cpu}",
+                                "memory": "${envOverrides.resources.limits.memory}"
+                              },
+                              "requests": {
+                                "cpu": "${envOverrides.resources.requests.cpu}",
+                                "memory": "${envOverrides.resources.requests.memory}"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "id": "service",
+                "template": {
+                  "apiVersion": "v1",
+                  "kind": "Service",
+                  "metadata": {
+                    "labels": "${metadata.labels}",
+                    "name": "${metadata.componentName}",
+                    "namespace": "${metadata.namespace}"
+                  },
+                  "spec": {
+                    "ports": [
+                      {
+                        "name": "http",
+                        "port": 80,
+                        "protocol": "TCP",
+                        "targetPort": "${parameters.port}"
+                      }
+                    ],
+                    "selector": "${metadata.podSelectors}",
+                    "type": "ClusterIP"
+                  }
+                }
+              },
+              {
+                "id": "httproute",
+                "template": {
+                  "apiVersion": "gateway.networking.k8s.io/v1",
+                  "kind": "HTTPRoute",
+                  "metadata": {
+                    "labels": "${metadata.labels}",
+                    "name": "${metadata.name}",
+                    "namespace": "${metadata.namespace}"
+                  },
+                  "spec": {
+                    "hostnames": [
+                      "${metadata.componentName}-${metadata.environmentName}.${dataplane.publicVirtualHost}"
+                    ],
+                    "parentRefs": [
+                      {
+                        "name": "gateway-default",
+                        "namespace": "openchoreo-data-plane"
+                      }
+                    ],
+                    "rules": [
+                      {
+                        "backendRefs": [
+                          {
+                            "name": "${metadata.componentName}",
+                            "port": 80
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "schema": {
+              "envOverrides": {
+                "resources": {
+                  "$default": {},
+                  "limits": {
+                    "$default": {},
+                    "cpu": "string | default=500m",
+                    "memory": "string | default=512Mi"
+                  },
+                  "requests": {
+                    "$default": {},
+                    "cpu": "string | default=100m",
+                    "memory": "string | default=256Mi"
+                  }
+                }
+              },
+              "parameters": {
+                "imagePullPolicy": "string | default=IfNotPresent",
+                "port": "integer | default=3000",
+                "replicas": "integer | default=1"
+              }
+            },
+            "workloadType": "deployment"
+          },
+          "owner": {
+            "componentName": "inventory-dashboard-gitops",
+            "projectName": "default"
+          },
+          "workload": {
+            "containers": {
+              "main": {
+                "image": "host.k3d.internal:10082/default-inventory-dashboard-gitops-image:v1-9dec2481"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "gvk": "openchoreo.dev/v1alpha1/DeploymentPipeline",
+      "namespace": "default",
+      "name": "simple-pipeline",
+      "filePath": "/mnt/vol/gitops/platform/infrastructure/deployment-pipelines/simple-pipeline.yaml",
+      "object": {
+        "apiVersion": "openchoreo.dev/v1alpha1",
+        "kind": "DeploymentPipeline",
+        "metadata": {
+          "name": "simple-pipeline",
+          "namespace": "default"
+        },
+        "spec": {
+          "promotionPaths": [
+            {
+              "sourceEnvironmentRef": "development",
+              "targetEnvironmentRefs": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "gvk": "openchoreo.dev/v1alpha1/Workload",
+      "namespace": "default",
+      "name": "inventory-dashboard-gitops-workload",
+      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-dashboard-gitops/workload.yaml",
+      "object": {
+        "apiVersion": "openchoreo.dev/v1alpha1",
+        "kind": "Workload",
+        "metadata": {
+          "name": "inventory-dashboard-gitops-workload",
+          "namespace": "default"
+        },
+        "spec": {
+          "containers": {
+            "main": {
+              "image": "host.k3d.internal:10082/default-inventory-dashboard-gitops-image:v1-9dec2481"
+            }
+          },
+          "endpoints": {
+            "inventory-dashboard": {
+              "port": 3000,
+              "type": "HTTP"
+            }
+          },
+          "owner": {
+            "componentName": "inventory-dashboard-gitops",
+            "projectName": "default"
+          }
+        }
+      }
+    },
+    {
+      "gvk": "openchoreo.dev/v1alpha1/Workload",
+      "namespace": "default",
+      "name": "inventory-api-gitops-workload",
+      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-api-gitops/workload.yaml",
+      "object": {
+        "apiVersion": "openchoreo.dev/v1alpha1",
+        "kind": "Workload",
+        "metadata": {
+          "name": "inventory-api-gitops-workload",
+          "namespace": "default"
+        },
+        "spec": {
+          "containers": {
+            "main": {
+              "env": [
+                {
+                  "key": "ENVIRONMENT",
+                  "value": "production"
+                },
+                {
+                  "key": "DB_SERVER",
+                  "valueFrom": {
+                    "secretRef": {
+                      "key": "value",
+                      "name": "inventory-db-server"
+                    }
+                  }
+                },
+                {
+                  "key": "DB_PORT",
+                  "valueFrom": {
+                    "secretRef": {
+                      "key": "value",
+                      "name": "inventory-db-port"
+                    }
+                  }
+                },
+                {
+                  "key": "DB_USER",
+                  "valueFrom": {
+                    "secretRef": {
+                      "key": "value",
+                      "name": "inventory-db-user"
+                    }
+                  }
+                },
+                {
+                  "key": "DB_PASSWORD",
+                  "valueFrom": {
+                    "secretRef": {
+                      "key": "value",
+                      "name": "inventory-db-password"
+                    }
+                  }
+                },
+                {
+                  "key": "DB_NAME",
+                  "valueFrom": {
+                    "secretRef": {
+                      "key": "value",
+                      "name": "inventory-db-name"
+                    }
+                  }
+                }
+              ],
+              "image": "host.k3d.internal:10082/default-inventory-api-gitops-image:v1-9dec2481"
+            }
+          },
+          "endpoints": {
+            "inventory-api": {
+              "port": 9090,
+              "type": "REST"
+            }
+          },
+          "owner": {
+            "componentName": "inventory-api-gitops",
+            "projectName": "default"
+          }
+        }
+      }
+    },
+    {
       "gvk": "openchoreo.dev/v1alpha1/Project",
       "namespace": "",
       "name": "default",
@@ -17,42 +549,42 @@
       }
     },
     {
-      "gvk": "openchoreo.dev/v1alpha1/Component",
+      "gvk": "openchoreo.dev/v1alpha1/ReleaseBinding",
       "namespace": "default",
-      "name": "inventory-api-gitops",
-      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-api-gitops/component.yaml",
+      "name": "inventory-api-gitops-development",
+      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-api-gitops/bindings/inventory-api-gitops-development.yaml",
       "object": {
         "apiVersion": "openchoreo.dev/v1alpha1",
-        "kind": "Component",
+        "kind": "ReleaseBinding",
         "metadata": {
-          "name": "inventory-api-gitops",
+          "name": "inventory-api-gitops-development",
           "namespace": "default"
         },
         "spec": {
-          "componentType": "service",
+          "environment": "development",
           "owner": {
+            "componentName": "inventory-api-gitops",
             "projectName": "default"
-          }
+          },
+          "releaseName": "inventory-api-gitops-9dec2481"
         }
       }
     },
     {
-      "gvk": "openchoreo.dev/v1alpha1/Component",
+      "gvk": "openchoreo.dev/v1alpha1/Environment",
       "namespace": "default",
-      "name": "inventory-dashboard-gitops",
-      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-dashboard-gitops/component.yaml",
+      "name": "development",
+      "filePath": "/mnt/vol/gitops/platform/infrastructure/environments/development.yaml",
       "object": {
         "apiVersion": "openchoreo.dev/v1alpha1",
-        "kind": "Component",
+        "kind": "Environment",
         "metadata": {
-          "name": "inventory-dashboard-gitops",
+          "name": "development",
           "namespace": "default"
         },
         "spec": {
-          "componentType": "web-application",
-          "owner": {
-            "projectName": "default"
-          }
+          "dataPlaneRef": "non-prod",
+          "isProduction": false
         }
       }
     },
@@ -371,358 +903,42 @@
       }
     },
     {
-      "gvk": "openchoreo.dev/v1alpha1/Workload",
+      "gvk": "openchoreo.dev/v1alpha1/Component",
       "namespace": "default",
-      "name": "inventory-api-gitops-workload",
-      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-api-gitops/workload.yaml",
+      "name": "inventory-dashboard-gitops",
+      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-dashboard-gitops/component.yaml",
       "object": {
         "apiVersion": "openchoreo.dev/v1alpha1",
-        "kind": "Workload",
+        "kind": "Component",
         "metadata": {
-          "name": "inventory-api-gitops-workload",
+          "name": "inventory-dashboard-gitops",
           "namespace": "default"
         },
         "spec": {
-          "containers": {
-            "main": {
-              "env": [
-                {
-                  "key": "ENVIRONMENT",
-                  "value": "production"
-                },
-                {
-                  "key": "DB_SERVER",
-                  "valueFrom": {
-                    "secretRef": {
-                      "key": "value",
-                      "name": "inventory-db-server"
-                    }
-                  }
-                },
-                {
-                  "key": "DB_PORT",
-                  "valueFrom": {
-                    "secretRef": {
-                      "key": "value",
-                      "name": "inventory-db-port"
-                    }
-                  }
-                },
-                {
-                  "key": "DB_USER",
-                  "valueFrom": {
-                    "secretRef": {
-                      "key": "value",
-                      "name": "inventory-db-user"
-                    }
-                  }
-                },
-                {
-                  "key": "DB_PASSWORD",
-                  "valueFrom": {
-                    "secretRef": {
-                      "key": "value",
-                      "name": "inventory-db-password"
-                    }
-                  }
-                },
-                {
-                  "key": "DB_NAME",
-                  "valueFrom": {
-                    "secretRef": {
-                      "key": "value",
-                      "name": "inventory-db-name"
-                    }
-                  }
-                }
-              ],
-              "image": "host.k3d.internal:10082/default-inventory-api-gitops-image:v1-9dec2481"
-            }
-          },
-          "endpoints": {
-            "inventory-api": {
-              "port": 9090,
-              "type": "REST"
-            }
-          },
+          "componentType": "deployment/web-application",
           "owner": {
-            "componentName": "inventory-api-gitops",
             "projectName": "default"
           }
         }
       }
     },
     {
-      "gvk": "openchoreo.dev/v1alpha1/ComponentRelease",
+      "gvk": "openchoreo.dev/v1alpha1/Component",
       "namespace": "default",
-      "name": "inventory-api-gitops-9dec2481",
-      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-api-gitops/releases/inventory-api-gitops-9dec2481.yaml",
+      "name": "inventory-api-gitops",
+      "filePath": "/mnt/vol/gitops/projects/default/components/inventory-api-gitops/component.yaml",
       "object": {
         "apiVersion": "openchoreo.dev/v1alpha1",
-        "kind": "ComponentRelease",
+        "kind": "Component",
         "metadata": {
-          "name": "inventory-api-gitops-9dec2481",
+          "name": "inventory-api-gitops",
           "namespace": "default"
         },
         "spec": {
-          "componentProfile": {
-            "parameters": null
-          },
-          "componentType": {
-            "resources": [
-              {
-                "id": "deployment",
-                "template": {
-                  "apiVersion": "apps/v1",
-                  "kind": "Deployment",
-                  "metadata": {
-                    "labels": "${metadata.labels}",
-                    "name": "${metadata.name}",
-                    "namespace": "${metadata.namespace}"
-                  },
-                  "spec": {
-                    "replicas": "${parameters.replicas}",
-                    "selector": {
-                      "matchLabels": "${metadata.podSelectors}"
-                    },
-                    "template": {
-                      "metadata": {
-                        "labels": "${metadata.podSelectors}"
-                      },
-                      "spec": {
-                        "containers": [
-                          {
-                            "image": "${workload.containers[\"app\"].image}",
-                            "imagePullPolicy": "${parameters.imagePullPolicy}",
-                            "name": "app",
-                            "ports": [
-                              {
-                                "containerPort": "${parameters.port}",
-                                "name": "http",
-                                "protocol": "TCP"
-                              }
-                            ],
-                            "resources": {
-                              "limits": {
-                                "cpu": "${envOverrides.resources.limits.cpu}",
-                                "memory": "${envOverrides.resources.limits.memory}"
-                              },
-                              "requests": {
-                                "cpu": "${envOverrides.resources.requests.cpu}",
-                                "memory": "${envOverrides.resources.requests.memory}"
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              },
-              {
-                "id": "service",
-                "template": {
-                  "apiVersion": "v1",
-                  "kind": "Service",
-                  "metadata": {
-                    "labels": "${metadata.labels}",
-                    "name": "${metadata.name}",
-                    "namespace": "${metadata.namespace}"
-                  },
-                  "spec": {
-                    "ports": [
-                      {
-                        "name": "http",
-                        "port": 80,
-                        "protocol": "TCP",
-                        "targetPort": "${parameters.port}"
-                      }
-                    ],
-                    "selector": "${metadata.podSelectors}",
-                    "type": "ClusterIP"
-                  }
-                }
-              },
-              {
-                "id": "httproute",
-                "template": {
-                  "apiVersion": "gateway.networking.k8s.io/v1",
-                  "kind": "HTTPRoute",
-                  "metadata": {
-                    "labels": "${metadata.labels}",
-                    "name": "${metadata.name}",
-                    "namespace": "${metadata.namespace}"
-                  },
-                  "spec": {
-                    "hostnames": [
-                      "${metadata.environmentName}.${dataplane.publicVirtualHost}"
-                    ],
-                    "parentRefs": [
-                      {
-                        "name": "gateway-default",
-                        "namespace": "openchoreo-data-plane"
-                      }
-                    ],
-                    "rules": [
-                      {
-                        "backendRefs": [
-                          {
-                            "name": "${metadata.name}",
-                            "port": 80
-                          }
-                        ],
-                        "filters": [
-                          {
-                            "type": "URLRewrite",
-                            "urlRewrite": {
-                              "path": {
-                                "replacePrefixMatch": "/",
-                                "type": "ReplacePrefixMatch"
-                              }
-                            }
-                          }
-                        ],
-                        "matches": [
-                          {
-                            "method": "GET",
-                            "path": {
-                              "type": "PathPrefix",
-                              "value": "/${metadata.name}"
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            "schema": {
-              "envOverrides": {
-                "resources": {
-                  "$default": {},
-                  "limits": {
-                    "$default": {},
-                    "cpu": "string | default=1000m",
-                    "memory": "string | default=1Gi"
-                  },
-                  "requests": {
-                    "$default": {},
-                    "cpu": "string | default=100m",
-                    "memory": "string | default=256Mi"
-                  }
-                }
-              },
-              "parameters": {
-                "imagePullPolicy": "string | default=IfNotPresent",
-                "port": "integer | default=80",
-                "replicas": "integer | default=1"
-              }
-            },
-            "workloadType": "deployment"
-          },
+          "componentType": "deployment/service",
           "owner": {
-            "componentName": "inventory-api-gitops",
             "projectName": "default"
-          },
-          "workload": {
-            "containers": {
-              "main": {
-                "env": [
-                  {
-                    "key": "ENVIRONMENT",
-                    "value": "production"
-                  },
-                  {
-                    "key": "DB_SERVER",
-                    "valueFrom": {
-                      "secretRef": {
-                        "key": "value",
-                        "name": "inventory-db-server"
-                      }
-                    }
-                  },
-                  {
-                    "key": "DB_PORT",
-                    "valueFrom": {
-                      "secretRef": {
-                        "key": "value",
-                        "name": "inventory-db-port"
-                      }
-                    }
-                  },
-                  {
-                    "key": "DB_USER",
-                    "valueFrom": {
-                      "secretRef": {
-                        "key": "value",
-                        "name": "inventory-db-user"
-                      }
-                    }
-                  },
-                  {
-                    "key": "DB_PASSWORD",
-                    "valueFrom": {
-                      "secretRef": {
-                        "key": "value",
-                        "name": "inventory-db-password"
-                      }
-                    }
-                  },
-                  {
-                    "key": "DB_NAME",
-                    "valueFrom": {
-                      "secretRef": {
-                        "key": "value",
-                        "name": "inventory-db-name"
-                      }
-                    }
-                  }
-                ],
-                "image": "host.k3d.internal:10082/default-inventory-api-gitops-image:v1-9dec2481"
-              }
-            }
           }
-        }
-      }
-    },
-    {
-      "gvk": "openchoreo.dev/v1alpha1/Environment",
-      "namespace": "default",
-      "name": "development",
-      "filePath": "/mnt/vol/gitops/platform/infrastructure/environments/development.yaml",
-      "object": {
-        "apiVersion": "openchoreo.dev/v1alpha1",
-        "kind": "Environment",
-        "metadata": {
-          "name": "development",
-          "namespace": "default"
-        },
-        "spec": {
-          "dataPlaneRef": "non-prod",
-          "isProduction": false
-        }
-      }
-    },
-    {
-      "gvk": "openchoreo.dev/v1alpha1/DeploymentPipeline",
-      "namespace": "default",
-      "name": "simple-pipeline",
-      "filePath": "/mnt/vol/gitops/platform/infrastructure/deployment-pipelines/simple-pipeline.yaml",
-      "object": {
-        "apiVersion": "openchoreo.dev/v1alpha1",
-        "kind": "DeploymentPipeline",
-        "metadata": {
-          "name": "simple-pipeline",
-          "namespace": "default"
-        },
-        "spec": {
-          "promotionPaths": [
-            {
-              "sourceEnvironmentRef": "development",
-              "targetEnvironmentRefs": []
-            }
-          ]
         }
       }
     }
