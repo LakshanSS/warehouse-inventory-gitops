@@ -3,7 +3,6 @@ apiVersion: openchoreo.dev/v1alpha1
 kind: Component
 metadata:
   name: inventory-api-gitops
-  namespace: default
 spec:
-  projectRef: default
+  project: default
   type: deployment/service
