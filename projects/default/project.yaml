@@ -1,8 +1,7 @@
-# Project definition for the default project
+# Project definition
 apiVersion: openchoreo.dev/v1alpha1
 kind: Project
 metadata:
   name: default
 spec:
   displayName: "Default Project"
-  description: "Default project for warehouse inventory demo"

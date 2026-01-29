@@ -1,0 +1,9 @@
+# Component definition for inventory-api-gitops
+apiVersion: openchoreo.dev/v1alpha1
+kind: Component
+metadata:
+  name: inventory-api-gitops
+  namespace: default
+spec:
+  projectRef: default
+  type: deployment/service

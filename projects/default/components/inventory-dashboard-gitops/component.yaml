@@ -1,0 +1,9 @@
+# Component definition for inventory-dashboard-gitops
+apiVersion: openchoreo.dev/v1alpha1
+kind: Component
+metadata:
+  name: inventory-dashboard-gitops
+  namespace: default
+spec:
+  projectRef: default
+  type: deployment/web-application
