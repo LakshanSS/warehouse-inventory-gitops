@@ -7,4 +7,4 @@ metadata:
 spec:
   owner:
     projectName: default
-  componentType: deployment/web-application
+  componentType: web-application

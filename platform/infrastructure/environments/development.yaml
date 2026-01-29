@@ -1,8 +1,8 @@
-# Development environment
 apiVersion: openchoreo.dev/v1alpha1
 kind: Environment
 metadata:
   name: development
   namespace: default
 spec:
-  displayName: "Development"
+  dataPlaneRef: non-prod
+  isProduction: false
