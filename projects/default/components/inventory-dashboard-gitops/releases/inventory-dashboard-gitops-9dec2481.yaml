@@ -25,9 +25,9 @@ spec:
               labels: ${metadata.podSelectors}
             spec:
               containers:
-              - image: ${workload.containers["app"].image}
+              - image: ${workload.containers["main"].image}
                 imagePullPolicy: ${parameters.imagePullPolicy}
-                name: app
+                name: main
                 ports:
                 - containerPort: ${parameters.port}
                   name: http
