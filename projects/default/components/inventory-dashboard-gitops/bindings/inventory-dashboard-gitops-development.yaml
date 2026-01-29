@@ -1,0 +1,11 @@
+apiVersion: openchoreo.dev/v1alpha1
+kind: ReleaseBinding
+metadata:
+  name: inventory-dashboard-gitops-development
+  namespace: default
+spec:
+  environment: development
+  owner:
+    componentName: inventory-dashboard-gitops
+    projectName: default
+  releaseName: inventory-dashboard-gitops-9dec2481
