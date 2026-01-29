@@ -1,9 +1,11 @@
-apiVersion: kustomize.config.k8s.io/v1beta1                                                                                                                                                          
-kind: Kustomization                                                                                                                                                                                  
-resources:                                                                                                                                                                                           
-    - components/inventory-api-gitops/workload.yaml                                                                                                                                                    
-    - components/inventory-api-gitops/releases/                                                                                                                                                        
-    - components/inventory-api-gitops/bindings/                                                                                                                                                        
-    - components/inventory-dashboard-gitops/workload.yaml                                                                                                                                              
-    - components/inventory-dashboard-gitops/releases/                                                                                                                                                  
-    - components/inventory-dashboard-gitops/bindings/ 
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # inventory-api-gitops
+  - components/inventory-api-gitops/workload.yaml
+  - components/inventory-api-gitops/releases/inventory-api-gitops-9dec2481.yaml
+  - components/inventory-api-gitops/bindings/inventory-api-gitops-development.yaml
+  # inventory-dashboard-gitops
+  - components/inventory-dashboard-gitops/workload.yaml
+  - components/inventory-dashboard-gitops/releases/inventory-dashboard-gitops-9dec2481.yaml
+  - components/inventory-dashboard-gitops/bindings/inventory-dashboard-gitops-development.yaml
