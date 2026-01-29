@@ -1,0 +1,8 @@
+# Development environment definition
+apiVersion: openchoreo.dev/v1alpha1
+kind: Environment
+metadata:
+  name: development
+spec:
+  displayName: "Development"
+  description: "Development environment for testing"

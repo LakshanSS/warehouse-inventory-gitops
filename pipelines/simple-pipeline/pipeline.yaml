@@ -1,0 +1,11 @@
+# Simple deployment pipeline
+apiVersion: openchoreo.dev/v1alpha1
+kind: DeploymentPipeline
+metadata:
+  name: simple-pipeline
+spec:
+  displayName: "Simple Pipeline"
+  description: "Simple single-environment deployment pipeline"
+  stages:
+    - name: development
+      environment: development

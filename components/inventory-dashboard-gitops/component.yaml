@@ -1,0 +1,10 @@
+# Component definition for inventory-dashboard-gitops
+# The Workload, ComponentRelease, and ReleaseBinding will be added by GitOps workflow
+apiVersion: openchoreo.dev/v1alpha1
+kind: Component
+metadata:
+  name: inventory-dashboard-gitops
+spec:
+  projectRef: default
+  displayName: "Inventory Dashboard (GitOps)"
+  description: "Next.js dashboard for warehouse inventory - deployed via GitOps"
