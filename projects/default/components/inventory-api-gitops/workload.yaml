@@ -1,0 +1,44 @@
+apiVersion: openchoreo.dev/v1alpha1
+kind: Workload
+metadata:
+  name: inventory-api-gitops-workload
+  namespace: default
+spec:
+  containers:
+    main:
+      env:
+      - key: ENVIRONMENT
+        value: production
+      - key: DB_SERVER
+        valueFrom:
+          secretRef:
+            key: value
+            name: inventory-db-server
+      - key: DB_PORT
+        valueFrom:
+          secretRef:
+            key: value
+            name: inventory-db-port
+      - key: DB_USER
+        valueFrom:
+          secretRef:
+            key: value
+            name: inventory-db-user
+      - key: DB_PASSWORD
+        valueFrom:
+          secretRef:
+            key: value
+            name: inventory-db-password
+      - key: DB_NAME
+        valueFrom:
+          secretRef:
+            key: value
+            name: inventory-db-name
+      image: host.k3d.internal:10082/default-inventory-api-gitops-image:v1-9dec2481
+  endpoints:
+    inventory-api:
+      port: 9090
+      type: REST
+  owner:
+    componentName: inventory-api-gitops
+    projectName: default

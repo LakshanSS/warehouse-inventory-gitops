@@ -1,0 +1,53 @@
+{
+  "directoryHash": "e89af4bebd79257738b363c18d1acee452b2977f883c6c0c8e4234d307a8df92",
+  "fileStates": {
+    "platform/component-types/service.yaml": {
+      "modTime": "2026-01-29T11:25:22.569501251Z",
+      "size": 3113,
+      "hash": "fd2a9fd92ab666a519aecb8432edf5187bb9a72a3a69b065cca38df37f6c9495"
+    },
+    "platform/component-types/web-application.yaml": {
+      "modTime": "2026-01-29T11:25:22.569501251Z",
+      "size": 2804,
+      "hash": "a08054ad95726935216fa28f0104a2ab426f3de8f71ffb3d38d12d034b61bf3a"
+    },
+    "platform/infrastructure/deployment-pipelines/simple-pipeline.yaml": {
+      "modTime": "2026-01-29T11:25:22.569501251Z",
+      "size": 212,
+      "hash": "69093b8efc63fd3b8d060112ea22b0bd8c34786debd100d72cd39efcef58eed8"
+    },
+    "platform/infrastructure/environments/development.yaml": {
+      "modTime": "2026-01-29T11:25:22.569501251Z",
+      "size": 158,
+      "hash": "759c0fa70293ce85e92b3c377f597ebcf4b68af8d25c070335060785802dbb7f"
+    },
+    "projects/default/components/inventory-api-gitops/component.yaml": {
+      "modTime": "2026-01-29T11:25:22.569501251Z",
+      "size": 225,
+      "hash": "a32b7705705ddd1cf359250830dd0518cd4814ad9d278787583bd18b475234d2"
+    },
+    "projects/default/components/inventory-api-gitops/releases/inventory-api-gitops-9dec2481.yaml": {
+      "modTime": "2026-01-29T11:25:47.00432896Z",
+      "size": 4045,
+      "hash": "b746e726b6d9ea946222848fa321221d94784d84a1e4d6ef90138979f176473b"
+    },
+    "projects/default/components/inventory-api-gitops/workload.yaml": {
+      "modTime": "2026-01-29T11:25:46.98132913Z",
+      "size": 1048,
+      "hash": "0f9d66485fbe4afc91231985331074e9dd5cd149d4918c801cc8f7bd4793c0cf"
+    },
+    "projects/default/components/inventory-dashboard-gitops/component.yaml": {
+      "modTime": "2026-01-29T11:25:22.569501251Z",
+      "size": 245,
+      "hash": "72dc0e71087a37f33e4e195c8f655b4e44b30f51bc8eaed5e9d5e8719c184bd1"
+    },
+    "projects/default/project.yaml": {
+      "modTime": "2026-01-29T11:25:22.569501251Z",
+      "size": 136,
+      "hash": "d4dc7bfd0ce32111cb71f60a8349582729fbc3bbecc07670ba4c99dca03226df"
+    }
+  },
+  "createdAt": "2026-01-29T11:25:47.038631457Z",
+  "lastUsed": "2026-01-29T11:25:47.038921621Z",
+  "resourceCount": 9
+}
