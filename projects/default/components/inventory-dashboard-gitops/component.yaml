@@ -3,6 +3,8 @@ apiVersion: openchoreo.dev/v1alpha1
 kind: Component
 metadata:
   name: inventory-dashboard-gitops
+  namespace: default
 spec:
-  project: default
-  type: deployment/web-application
+  owner:
+    projectName: default
+  componentType: deployment/web-application
