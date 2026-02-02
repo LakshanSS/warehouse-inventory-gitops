@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
     main:
-      image: host.k3d.internal:10082/default-inventory-dashboard-gitops-image:v1-9dec2481
+      image: host.k3d.internal:10082/default-inventory-dashboard-gitops-image:v1-fa823283
   endpoints:
     inventory-dashboard:
       port: 3000
