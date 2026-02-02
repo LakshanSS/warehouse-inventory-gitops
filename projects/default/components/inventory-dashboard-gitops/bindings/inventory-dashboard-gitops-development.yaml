@@ -8,4 +8,4 @@ spec:
   owner:
     componentName: inventory-dashboard-gitops
     projectName: default
-  releaseName: inventory-dashboard-gitops-9dec2481
+  releaseName: inventory-dashboard-gitops-fa823283
