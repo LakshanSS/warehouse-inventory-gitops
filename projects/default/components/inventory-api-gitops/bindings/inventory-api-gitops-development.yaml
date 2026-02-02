@@ -8,4 +8,4 @@ spec:
   owner:
     componentName: inventory-api-gitops
     projectName: default
-  releaseName: inventory-api-gitops-9dec2481
+  releaseName: inventory-api-gitops-fa823283

@@ -34,7 +34,7 @@ spec:
           secretRef:
             key: value
             name: inventory-db-name
-      image: host.k3d.internal:10082/default-inventory-api-gitops-image:v1-9dec2481
+      image: host.k3d.internal:10082/default-inventory-api-gitops-image:v1-fa823283
   endpoints:
     inventory-api:
       port: 9090
