@@ -5,7 +5,8 @@ metadata:
   namespace: default
 spec:
   componentProfile:
-    parameters: null
+    parameters:
+      port: 3000
   componentType:
     resources:
     - id: deployment
